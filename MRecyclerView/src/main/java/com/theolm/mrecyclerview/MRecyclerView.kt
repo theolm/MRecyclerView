@@ -1,8 +1,10 @@
 package com.theolm.mrecyclerview
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -16,7 +18,7 @@ class MRecyclerView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView) }
     private val swipeRefreshLayout by lazy { findViewById<SwipeRefreshLayout>(R.id.swipeRefresh) }
-    
+
     init {
         val root = inflate(context, R.layout.mrecyclerview, this)
 
@@ -24,13 +26,15 @@ class MRecyclerView @JvmOverloads constructor(
 
         try {
             val loadMore = customAttrs.getBoolean(R.styleable.MRecyclerView_loadMore, false)
+
+            setSwipeRefreshColors(intArrayOf(customAttrs.getColor(R.styleable.MRecyclerView_pullToRefreshColor, Color.BLACK)))
+
             val pullToRefresh = customAttrs.getBoolean(
                 R.styleable.MRecyclerView_pullToRefresh,
                 false
             )
 
             swipeRefreshLayout.isEnabled = pullToRefresh
-
         } finally {
             customAttrs.recycle()
         }
@@ -59,6 +63,10 @@ class MRecyclerView @JvmOverloads constructor(
 
     fun setOnRefreshListener(listener: OnRefreshListener?) {
         swipeRefreshLayout.setOnRefreshListener(listener)
+    }
+
+    fun setSwipeRefreshColors(@ColorInt colors: IntArray) {
+        swipeRefreshLayout.setColorSchemeColors(*colors)
     }
 
 }

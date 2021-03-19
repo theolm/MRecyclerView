@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.setOnRefreshListener {
             Log.d("ehsuahe", "aseasse")
-            recyclerView.isRefreshing(false)
         }
 
         loadItems()

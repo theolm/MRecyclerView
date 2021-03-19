@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="MRecyclerView">
         <attr name="pullToRefresh" format="boolean"/>
+        <attr name="pullToRefreshColor" format="color"/>
         <attr name="loadMore" format="boolean"/>
     </declare-styleable>
 </resources>
