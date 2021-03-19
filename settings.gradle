@@ -1,0 +1,3 @@
+include ':MRecyclerView'
+include ':app'
+rootProject.name = "TestApp"
