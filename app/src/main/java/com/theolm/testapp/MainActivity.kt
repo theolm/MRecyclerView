@@ -22,6 +22,12 @@ class MainActivity : AppCompatActivity() {
             Log.d("ehsuahe", "aseasse")
         }
 
+        recyclerView.setLoadMoreListener {
+            recyclerView.isLoadingMore = true
+            loadItems()
+            recyclerView.isLoadingMore = false
+        }
+
         loadItems()
     }
 
