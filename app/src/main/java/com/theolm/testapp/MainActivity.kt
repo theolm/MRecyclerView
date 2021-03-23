@@ -19,13 +19,14 @@ class MainActivity : AppCompatActivity() {
         recyclerView.setAdapter(adapter)
 
         recyclerView.setOnRefreshListener {
-            Log.d("ehsuahe", "aseasse")
+            adapter.clear()
+            loadItems()
+            recyclerView.refreshComplete()
         }
 
         recyclerView.setLoadMoreListener {
-            recyclerView.isLoadingMore = true
             loadItems()
-            recyclerView.isLoadingMore = false
+            recyclerView.loadingMoreComplete()
         }
 
         loadItems()

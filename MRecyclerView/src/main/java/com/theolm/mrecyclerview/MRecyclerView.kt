@@ -5,12 +5,8 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -20,11 +16,12 @@ class MRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
-    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView) }
-    private val swipeRefreshLayout by lazy { findViewById<SwipeRefreshLayout>(R.id.swipeRefresh) }
+    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.internalMRecyclerView) }
+    private val swipeRefreshLayout by lazy { findViewById<SwipeRefreshLayout>(R.id.internalSwipeRefresh) }
+    private var refreshListener : (() -> Unit)? = null
     private var loadMoreListener: (() -> Unit)? = null
-    var isLastPage = false
-    var isLoadingMore = false
+    private var isLastPage = false
+    private var isLoadingMore = false
 
     init {
         inflate(context, R.layout.mrecyclerview, this)
@@ -32,31 +29,36 @@ class MRecyclerView @JvmOverloads constructor(
         val customAttrs = context.obtainStyledAttributes(attrs, R.styleable.MRecyclerView, 0, 0)
 
         try {
-
             //Load More
             val loadMore = customAttrs.getBoolean(R.styleable.MRecyclerView_loadMore, false)
-            configureLoadMore(loadMore)
-
+            enableLoadMore(loadMore)
 
             //Refresh Layout
             setSwipeRefreshColors(intArrayOf(customAttrs.getColor(R.styleable.MRecyclerView_pullToRefreshColor, Color.BLACK)))
-
             val pullToRefresh = customAttrs.getBoolean(
                 R.styleable.MRecyclerView_pullToRefresh,
                 false
             )
+            swipeRefreshLayout.setOnRefreshListener {
+                isLastPage = false
+                refreshListener?.invoke()
+            }
+            enableRefresh(pullToRefresh)
 
-            swipeRefreshLayout.isEnabled = pullToRefresh
         } finally {
             customAttrs.recycle()
         }
-
     }
 
-    private fun configureLoadMore(loadMore: Boolean) {
+    fun enableRefresh(b: Boolean) {
+        swipeRefreshLayout.isEnabled = b
+    }
+
+    fun enableLoadMore(loadMore: Boolean) {
         if (loadMore) {
             recyclerView.addOnScrollListener(object : EndlessRecyclerViewScrollListener(recyclerView) {
                 override fun loadMoreItems() {
+                    isLoadingMore = true
                     loadMoreListener?.invoke()
                 }
 
@@ -67,7 +69,17 @@ class MRecyclerView @JvmOverloads constructor(
                     get() = isLoadingMore
 
             })
+        } else {
+            recyclerView.clearOnScrollListeners()
         }
+    }
+
+    fun loadMoreComplete() {
+        isLoadingMore = false
+    }
+
+    fun loadMoreLastPage(isLastPage: Boolean) {
+        this.isLastPage = isLastPage
     }
 
     fun setHasFixedSize(hasFixedSize: Boolean) {
@@ -86,12 +98,16 @@ class MRecyclerView @JvmOverloads constructor(
 
     fun getRootRecyclerView() : RecyclerView = recyclerView
 
-    fun isRefreshing(isRefreshing: Boolean) {
-        swipeRefreshLayout.isRefreshing = isRefreshing
+    fun isRefreshing(b: Boolean) {
+        swipeRefreshLayout.isRefreshing = b
     }
 
-    fun setOnRefreshListener(listener: OnRefreshListener?) {
-        swipeRefreshLayout.setOnRefreshListener(listener)
+    fun refreshComplete() {
+        swipeRefreshLayout.isRefreshing = false
+    }
+
+    fun setOnRefreshListener(listener: (() -> Unit)) {
+        refreshListener = listener
     }
 
     fun setSwipeRefreshColors(@ColorInt colors: IntArray) {

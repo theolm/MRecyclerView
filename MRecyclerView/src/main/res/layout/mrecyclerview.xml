@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/swipeRefresh"
+    android:id="@+id/internalSwipeRefresh"
     >
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/internalMRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
