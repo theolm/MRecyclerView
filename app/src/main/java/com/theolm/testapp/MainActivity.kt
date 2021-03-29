@@ -26,9 +26,13 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.setLoadMoreListener {
             loadItems()
-            recyclerView.loadingMoreComplete()
+            recyclerView.loadMoreComplete()
         }
 
+        val emptyView = layoutInflater.inflate(R.layout.empty_view, null)
+        recyclerView.setEmptyView(emptyView)
+
+//        recyclerView.showEmptyView()
         loadItems()
     }
 

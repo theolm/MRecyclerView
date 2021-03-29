@@ -3,6 +3,8 @@ package com.theolm.mrecyclerview
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +20,7 @@ class MRecyclerView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     private val recyclerView by lazy { findViewById<RecyclerView>(R.id.internalMRecyclerView) }
     private val swipeRefreshLayout by lazy { findViewById<SwipeRefreshLayout>(R.id.internalSwipeRefresh) }
+    private val emptyView by lazy { findViewById<FrameLayout>(R.id.emptyView) }
     private var refreshListener : (() -> Unit)? = null
     private var loadMoreListener: (() -> Unit)? = null
     private var isLastPage = false
@@ -118,4 +121,15 @@ class MRecyclerView @JvmOverloads constructor(
         loadMoreListener = l
     }
 
+    fun setEmptyView(view: View) {
+        emptyView.addView(view)
+    }
+
+    fun showEmptyView() {
+        emptyView.visibility = View.VISIBLE
+    }
+
+    fun hideEmptyView() {
+        emptyView.visibility = View.GONE
+    }
 }
