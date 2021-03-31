@@ -20,7 +20,7 @@ class MRecyclerView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     private val recyclerView by lazy { findViewById<RecyclerView>(R.id.internalMRecyclerView) }
     private val swipeRefreshLayout by lazy { findViewById<SwipeRefreshLayout>(R.id.internalSwipeRefresh) }
-    private val emptyView by lazy { findViewById<FrameLayout>(R.id.emptyView) }
+    private val emptyView by lazy { findViewById<FrameLayout>(R.id.internalEmptyView) }
     private var refreshListener : (() -> Unit)? = null
     private var loadMoreListener: (() -> Unit)? = null
     private var isLastPage = false
