@@ -23,7 +23,7 @@ allprojects {
         jcenter()
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/theolm/MRecyclerView")
+            url = uri("https://maven.pkg.github.com/mockatech/MockaLibs")
             credentials {
                 username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
                 password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
